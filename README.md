@@ -1,5 +1,5 @@
-# graspSPP_cpp
-GRASP pour le Set Packing Problem (SPP)
+# reactivegraspSPP_cpp
+ReactiveGRASP pour le Set Packing Problem (SPP)
 
 *Commande pour compiler*:
 ```bash
@@ -88,7 +88,7 @@ Sinon pour exécuter les itérations séquentiellement :
 ```
 
 Pour préciser le nombre de threads maximum qu'OpenMP peut utiliser pour paralléliser GRASP veuillez
-redéfinir MAX_THREADS (constante prépocesseur dans le fichier `src/main.cpp`) :
+redéfinir MAX_THREADS (constante préprocesseur dans le fichier `src/main.cpp`) :
 ```c
 #define MAX_THREADS <x>
 ```
@@ -97,12 +97,31 @@ Où _x_ est un nombre entier strictement positif (toute valeur incorrecte sera r
 
 ### Paramètres du GRASP
 #### Alpha
-Pour modifier la valeur de alpha veuillez redéfinir ALPHA (constante préprocesseur dans le
+Pour modifier les valeur de alpha veuillez redéfinir ALPHA (constante préprocesseur dans le
 fichier `src/main.cpp`) :
 ```c
-#define ALPHA <x>
+#define ALPHA <list>
 ```
-Où _x_ est un flottant entre 0 et 1.
+Où _list_ est une liste de flottant entre 0 et 1 séparés par des virgules et
+entre accolades (Exemple : {0.0, 0.25, 0.5, 0.75, 1.0}).
+
+#### Delta
+Pour modifier le paramètre delta veuillez redéfinir DELTA (constante
+préproceseseur dans le fichier `src/main.cpp`) :
+```c
+#define DELTA <x>
+```
+Où _x_ est un nombre.
+
+#### Nombre d'itérations avant de mettre à jour les probabilités des alpha
+Pour modifier le nombre d'itérations qu'il faut attendre avant de mettre
+à jour les probabilités des valeurs alpha veuillez redéfinir PROBA_UPDATE (
+constante préprocesseur dans le fichier `src/main.cpp`) :
+```c
+#define PROBA_UPDATE <x>
+```
+Où _x_ est un nombre entier inférieur ou égal à NUM_ITER (toute valeur incorrecte
+sera corrigée).
 
 #### Nombre d'itérations
 Pour modifier le nombre d'itérations veuillez redéfinir NUM_ITER (
