@@ -14,9 +14,9 @@
 // Paramètres GRASP
 #define NUM_RUN         1
 #define NUM_ITER        200
-#define ALPHA           {0.0, 0.35, 0.5, 0.75, 0.9}
-#define DELTA           2
-#define PROBA_UPDATE    20
+#define ALPHA           {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95}
+#define DELTA           4
+#define PROBA_UPDATE    40
 #define NUM_DIVISION    20
 #define DEEPSEARCH      false
 #define INTERACTIVE     false

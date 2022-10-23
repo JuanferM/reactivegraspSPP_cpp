@@ -133,7 +133,7 @@ void ReactiveGRASP(
                zmin = (double)*std::min_element(zAmels.begin(), zAmels.begin()+chunkLeft);
         for(j = 0; j < (int)pool.size(); j++, mean = 0.0) {
             for(double e : pool[j]) mean += e;
-            mean /= pool[j].size();
+            mean = pool[j].size() ? mean/pool[j].size() : zmin;
             diff = zmax - zmin;
             frac = diff ? (mean - zmin)/diff : diff;
             valuation[j] = std::pow(frac, (double)delta);
