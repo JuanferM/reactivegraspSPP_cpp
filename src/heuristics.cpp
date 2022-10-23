@@ -87,6 +87,7 @@ void ReactiveGRASP(
         bool deep,
         bool parallel) {
     int iter(0), zBest(-1), chunkLeft(probaUpdate), upd(0);
+    double mean(0.0), diff(0.0), frac(0.0), sum(0.0), zmax(0.0), zmin(0.0);
     std::vector<std::vector<int>> pool(alpha.size(), std::vector<int>(probaUpdate));
     std::vector<double> valuation(pool.size(), 0.0);
     std::vector<int> poolData_i(probaUpdate, 0);
@@ -127,21 +128,19 @@ void ReactiveGRASP(
             pool[poolData_i[upd]].push_back(poolData_z[upd]);
 
         // Section de code difficilement parallélisable
-        int j(0);
-        double mean(0.0), diff(0.0), frac(0.0), sum(0.0),
-               zmax = (double)*std::max_element(zAmels.begin(), zAmels.begin()+chunkLeft),
-               zmin = (double)*std::min_element(zAmels.begin(), zAmels.begin()+chunkLeft);
-        for(j = 0; j < (int)pool.size(); j++, mean = 0.0) {
-            for(double e : pool[j]) mean += e;
-            mean = pool[j].size() ? mean/pool[j].size() : zmin;
+        zmax = (double)*std::max_element(zAmels.begin(), zAmels.begin()+chunkLeft),
+        zmin = (double)*std::min_element(zAmels.begin(), zAmels.begin()+chunkLeft);
+        for(upd = 0, sum = 0.0; upd < (int)pool.size(); upd++, mean = 0.0) {
+            for(double e : pool[upd]) mean += e;
+            mean = pool[upd].size() ? mean/pool[upd].size() : zmin;
             diff = zmax - zmin;
             frac = diff ? (mean - zmin)/diff : diff;
-            valuation[j] = std::pow(std::abs(frac), (double)delta);
-            sum += valuation[j];
+            valuation[upd] = std::pow(std::abs(frac), (double)delta);
+            sum += valuation[upd];
         }
 
-        for(j = 0; j < (int)proba.size(); j++)
-            proba[j] = sum ? valuation[j]/sum : proba[j];
+        for(upd = 0; upd < (int)proba.size(); upd++)
+            proba[upd] = sum ? valuation[upd]/sum : proba[upd];
 
         for(auto e : pool) e.clear(); // Clear each pool
     }
