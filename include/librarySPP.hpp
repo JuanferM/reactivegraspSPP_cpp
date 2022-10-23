@@ -81,13 +81,13 @@ void freeSPP(int* C, char* A, float* U);
 
 // Computes indirect sort of an array (decreasing order)
 template<typename T>
-int* argsort(int size, const T* arr) {
+std::vector<int> argsort(int size, const T* arr) {
     // initialize original index locations
-    int* idx = new int[size];
-    std::iota(idx, idx+size, 0);
+    std::vector<int> idx(size);
+    std::iota(idx.begin(), idx.begin()+size, 0);
 
     // sort indexes based on comparing values in arr
-    std::stable_sort(idx, idx+size,
+    std::stable_sort(idx.begin(), idx.begin()+size,
         [&arr](size_t e1, size_t e2) {
             return arr[e1] > arr[e2];
         }

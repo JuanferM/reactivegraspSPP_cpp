@@ -90,9 +90,7 @@ int main() {
                     tMoy.push_back(0);
                 ins = 0;
             }
-            auto proba = matplot::transform(
-                matplot::linspace(0, 1, (int)alpha.size()),
-                [alpha](double x) {return 1.0/alpha.size();});
+            std::vector<double> proba = std::vector<double>(alpha.size(), 1.0/alpha.size());
 
             // Load one numerical instance
             std::tie(m, n, C, A, U) = loadSPP(path + instance);
@@ -141,7 +139,7 @@ int main() {
 
         // Plots
         m_print(std::cout, "\n\nBilan CPUt moyen (par run) pour chaque instance...\n");
-        // plotCPUt(fnames, tMoy);
+        plotCPUt(fnames, tMoy);
 
         if(INTERACTIVE) {
             m_print(std::cout, _CLG, "\nMODE INTÉRACTIF: Appuyez sur ENTRER pour terminer...\n", _CLR);

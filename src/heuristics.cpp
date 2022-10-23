@@ -19,7 +19,7 @@ std::tuple<char*, int, char*> GreedyRandomized(
     for(i = 0; i < n; i++) x[i] = 0;
     for(j = 0; j < m; j++) column[j] = 0;
 
-    int* u_order = argsort(n, U); // DON'T FORGET TO DELETE
+    std::vector<int> u_order = argsort(n, U); // DON'T FORGET TO DELETE
 
     k = 0;
     while(s != m && k < n) {
@@ -45,7 +45,6 @@ std::tuple<char*, int, char*> GreedyRandomized(
         k += 1; RCL.clear();
     }
 
-    delete[] u_order;
     return std::make_tuple(x, dot(n, x, C), column);
 }
 
@@ -84,55 +83,69 @@ void ReactiveGRASP(
         std::vector<double>& proba,
         const int probaUpdate,
         const double delta,
-        const int nbIter,
-        const bool deep,
-        const bool parallel) {
-    int iter(0), zBest(-1), update(0);
-    std::vector<std::vector<int>> pool(alpha.size());
-    std::vector<double> valuation(alpha.size(), 0);
+        int nbIter,
+        bool deep,
+        bool parallel) {
+    int iter(0), zBest(-1), chunkLeft(probaUpdate), upd(0);
+    std::vector<std::vector<int>> pool(alpha.size(), std::vector<int>(probaUpdate));
+    std::vector<double> valuation(pool.size(), 0.0);
+    std::vector<int> poolData_i(probaUpdate, 0);
+    std::vector<int> poolData_z(probaUpdate, 0);
 
-    #pragma omp parallel for ordered if(parallel)
-    for(iter = 0; iter < nbIter; iter++) {
-        char *x(nullptr), *column(nullptr);
-        int i(0), j(0);
-        double sel_alpha(-1), idx((double)rand() / RAND_MAX), s(0);
-        for(i = 0; i < (int)proba.size() && sel_alpha == -1; i++) {
-            s += proba[i];
-            if(idx < s) sel_alpha = proba[i];
+    for(iter = 0; iter < nbIter; iter += chunkLeft) {
+        if(iter + chunkLeft > nbIter) chunkLeft = nbIter-iter;
+
+        #pragma omp parallel for if(parallel)
+        for(upd = iter; upd < iter+chunkLeft; upd++) {
+            char *x(nullptr), *column(nullptr);
+            int i(0);
+            float sel_alpha(-1.0), idx((double)rand() / RAND_MAX), s(0);
+            for(i = 0; i < (int)proba.size() && sel_alpha == -1.0; i++) {
+                s += proba[i];
+                if(idx < s) sel_alpha = (float)alpha[i];
+            }
+            if(i == (int)proba.size()) i--;
+            if(sel_alpha == -1.0) { // Make sure sel_alpha is well defined in any
+                i = rand() / alpha.size(); // case
+                sel_alpha = alpha[i];
+            }
+            std::tie(x, zInits[upd], column) = GreedyRandomized(m, n, C, A, U, sel_alpha);
+            zAmels[upd] = zInits[upd];
+            GreedyImprovement(m, n, C, A,
+                    x, &zAmels[upd], deep, column);
+            // Pool data (will help to reconstruct the pool after the parallel for)
+            poolData_i[upd-iter] = i;
+            poolData_z[upd-iter] = zAmels[upd];
+
+            /* MOST IMPORTANT SECTION */
+            if(x) delete[] x, x = nullptr;
+            if(column) delete[] column, column = nullptr;
         }
-        if(i == (int)proba.size()) i--;
-        std::tie(x, zInits[iter], column) = GreedyRandomized(m, n, C, A, U, sel_alpha);
-        zAmels[iter] = zInits[iter];
-        GreedyImprovement(m, n, C, A,
-                x, &zAmels[iter], deep, column);
+
+        // Reconstruct pool
+        for(upd = 0; upd < chunkLeft; upd++)
+            pool[poolData_i[upd]].push_back(poolData_z[upd]);
 
         // Section de code difficilement parallélisable
-        if(update == probaUpdate) {
-            #pragma omp critical
-            {
-                int zMax = *std::max_element(zAmels.begin(), zAmels.end()),
-                    zMin = *std::min_element(zAmels.begin(), zAmels.end());
-                for(j = 0; j < (int)alpha.size(); j++) {
-                    double mean(0); for(auto e : pool[j]) mean += e;
-                    mean = (pool[j].size() ? mean/pool[j].size() : 0);
-                    valuation[j] = std::pow((mean - zMin)/(zMax-zMin), delta);
-                    pool[j].clear();
-                }
-                double sum(0); for(auto e : valuation) sum += e;
-                for(j = 0; j < (int)proba.size(); j++) {
-                    proba[j] = valuation[j]/sum;
-                    proba[j] = (std::isnan(proba[j]) ? 0.0 : proba[j]);
-                }
-                update = 0;
-            }
+        int j(0);
+        double mean(0.0), diff(0.0), frac(0.0), sum(0.0),
+               zmax = (double)*std::max_element(zAmels.begin(), zAmels.begin()+chunkLeft),
+               zmin = (double)*std::min_element(zAmels.begin(), zAmels.begin()+chunkLeft);
+        for(j = 0; j < (int)pool.size(); j++, mean = 0.0) {
+            for(double e : pool[j]) mean += e;
+            mean /= pool[j].size();
+            diff = zmax - zmin;
+            frac = diff ? (mean - zmin)/diff : diff;
+            valuation[j] = std::pow(frac, (double)delta);
+            sum += valuation[j];
         }
 
-        pool[i].push_back(zAmels[iter]), update++;
+        for(j = 0; j < (int)proba.size(); j++)
+            proba[j] = sum ? valuation[j]/sum : proba[j];
 
-        /* MOST IMPORTANT SECTION */
-        if(x) delete[] x, x = nullptr;
-        if(column) delete[] column, column = nullptr;
+        for(auto e : pool) e.clear(); // Clear each pool
     }
+
 
     // Compute zBests using zAmels
     for(iter = 0; iter < nbIter; iter++) {

@@ -36,7 +36,7 @@ void plotAnalyseGRASP(
 // Plot le bilan CPUt pour chaque instance (le
 // temps d'exécution moyen d'un run)
 void plotCPUt(
-        std::vector<std::string> fnames,
-        std::vector<float> tMoy);
+        std::vector<std::string>& fnames,
+        std::vector<float>& tMoy);
 
 #endif /* end of include guard: GRASPPLOTS_H */
