@@ -136,7 +136,7 @@ void ReactiveGRASP(
             mean = pool[j].size() ? mean/pool[j].size() : zmin;
             diff = zmax - zmin;
             frac = diff ? (mean - zmin)/diff : diff;
-            valuation[j] = std::pow(frac, (double)delta);
+            valuation[j] = std::pow(std::abs(frac), (double)delta);
             sum += valuation[j];
         }
 
