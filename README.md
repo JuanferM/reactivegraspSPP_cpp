@@ -23,7 +23,7 @@ doit être dans `bin`. Pour utiliser le makefile les répertoires `include`, `sr
 supposées être lancé depuis le répértoire parent de `src` (sauf indication contraire).
 
 ### Dépendances et standard C++ utilisé
-Le standard C++ utilisé dans ce projet est le C++17, assurez-vous d'avoir une version
+Le standard C++ utilisé dans ce projet est le C++20, assurez-vous d'avoir une version
 de g++ supportant ce standard.
 
 Il est possible de résoudre les instances avec GLPK, assurez-vous d'avoir GLPK
