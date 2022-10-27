@@ -23,7 +23,7 @@ LIB := $(foreach d, $(LIB_DIR), -L$d)
 # CC specifies which compiler we're using
 CC 			:= g++
 # COMPILER_FLAGS specifies the additional compilation options we're using
-CXXFLAGS	:= -Wall -fpic -std=c++2a -fopenmp
+CXXFLAGS	:= -O3 -Wall -fpic -std=c++2a -fopenmp
 # Linker flag
 LDFLAGS		:=
 # LDFLAGS specifies the libraries we're linking against

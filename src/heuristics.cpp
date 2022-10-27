@@ -38,7 +38,7 @@ std::tuple<char*, int, char*> GreedyRandomized(
         // Select an element e from RCL at random
         e = (RCL.size()) ? *select_randomly(RCL.begin(), RCL.end()) : max_u;
         for(j = 0, valid = true; j < m && valid; j++)
-            valid = column[j] + A[INDEX(u_order[e], j)] <= 1;
+            valid = !(column[j] & A[INDEX(u_order[e], j)]);
         for(j = 0, s = 0; valid && j < m; s += column[j], j++)
             column[j] += A[INDEX(u_order[e], j)];
         x[u_order[e]] = valid, u_order[e] = -1;
