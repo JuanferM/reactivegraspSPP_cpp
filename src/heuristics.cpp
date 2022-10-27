@@ -12,7 +12,7 @@ std::tuple<char*, int, char*> GreedyRandomized(
         const float* U,
         const float alpha) {
     bool valid;
-    int i(0), j(0), k(0), s(0), e(0), min_u, max_u;
+    int i(0), j(0), k(0), s(0), e(0), min_u(n-1), max_u(0);
     float limit(0.0f);
     std::vector<int> RCL;
     char *x = new char[n], *column = new char[m];
@@ -24,9 +24,9 @@ std::tuple<char*, int, char*> GreedyRandomized(
     k = 0;
     while(s != m && k < n) {
         // Indices of max and min utilities
-        for(j = 0, max_u = 0; j < n && u_order[max_u] == -1; j++)
+        for(j = max_u, max_u = 0; j < n && u_order[max_u] == -1; j++)
             max_u = j;
-        for(j = n-1, min_u = 0; j >= 0 && u_order[min_u] == -1; j--)
+        for(j = min_u, min_u = 0; j >= 0 && u_order[min_u] == -1; j--)
             min_u = j;
         limit = U[u_order[min_u]] + alpha * (U[u_order[max_u]] - U[u_order[min_u]]);
         for(j = 0; j < n; j++)
