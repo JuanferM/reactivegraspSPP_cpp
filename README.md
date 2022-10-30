@@ -164,7 +164,19 @@ Sinon pour des descentes "normales" :
 #define DEEPSEARCH false
 ```
 
-#### Mode intéractif
+#### Paramètres plots
+L'affichage des plots peut être désactivé. Veuillez redéfinir SILENT_MODE
+(constante préprocesseur dans le fichier `src/main.cpp`) :
+```c
+#define SILENT_MODE true
+```
+Il est recommandé d'enregistrer les plots dans un répertoire pour garder
+une trace de l'exécution lorsque ce mode est activé (voir ci-dessous). Sinon,
+pour afficher les plots :
+```c
+#define SILENT_MODE false
+```
+
 Les plots affichés sont tous intéractifs. L'actionnement de la molette de la
 souris permet de zoomer sur les plots. Cependant, une fois que le programme
 est terminé les plots deviennent statiques et il est impossible d'intéragir
