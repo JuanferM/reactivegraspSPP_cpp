@@ -180,6 +180,17 @@ Pour le désactiver :
 #define INTERACTIVE false
 ```
 
+Pour enregistrer les plots dans un répertoire veuillez redéfinir PATH_PLOT (constante
+préprocesseur dans le fichier `src/main.cpp`) :
+```c
+#define PATH_PLOT <path>
+```
+Où _path_ est une chaîne de caractères spécifiant le chemin vers le répertoire (Exemple :
+"exp/" ou "."). Pour ne pas enregistrer les plots :
+```c
+#define PATH_PLOT ""
+```
+
 
 ### Listes des instances qui ont été utilisées pour l'expérimentation
 * didactic.dat

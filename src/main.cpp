@@ -13,13 +13,16 @@
 
 // Paramètres GRASP
 #define NUM_RUN         1
-#define NUM_ITER        50
+#define NUM_ITER        200
 #define ALPHA           {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95}
 #define DELTA           4
 #define PROBA_UPDATE    50
 #define NUM_DIVISION    20
 #define DEEPSEARCH      false
+
+// Paramètres plot
 #define INTERACTIVE     false
+#define PATH_PLOT       "exp/"
 
 int main() {
     // This program will create different sequence of
@@ -62,6 +65,8 @@ int main() {
             m_print(std::cout, "\nnombre de threads\t: ", MAX_THREADS);
         m_print(std::cout, "\ndescente profonde\t: ", (DEEPSEARCH ? "oui" : "non"));
         m_print(std::cout, "\nplot des runs en \t: ", _NBD_, " points");
+        if(std::string("").compare(PATH_PLOT))
+            m_print(std::cout, "\nrépertoire plots \t: ", PATH_PLOT);
         m_print(std::cout, "\nmode intéractif\t\t: ", (INTERACTIVE ? "oui" : "non"), "\n\n", _CLR);
 
         float t(0), *U(nullptr);
@@ -118,11 +123,11 @@ int main() {
 
             // Plots
             m_print(std::cout, "\nPlot du dernier run...\n");
-            plotRunGRASP(instance, zInits, zAmels, zBests);
+            plotRunGRASP(instance, zInits, zAmels, zBests, PATH_PLOT);
             m_print(std::cout, "Plot des probabilités des α pour le dernier run...\n");
-            plotProbaRunGRASP(instance, alpha, proba);
+            plotProbaRunGRASP(instance, alpha, proba, PATH_PLOT);
             m_print(std::cout, "Bilan de l'ensemble des runs...\n");
-            plotAnalyseGRASP(instance, divs, zMin, zMoy, zMax);
+            plotAnalyseGRASP(instance, divs, zMin, zMoy, zMax, PATH_PLOT);
 
             /* MOST IMPORTANT SECTIONS */
             freeSPP(C, A, U);
@@ -139,7 +144,7 @@ int main() {
 
         // Plots
         m_print(std::cout, "\n\nBilan CPUt moyen (par run) pour chaque instance...\n");
-        plotCPUt(fnames, tMoy);
+        plotCPUt(fnames, tMoy, PATH_PLOT);
 
         if(INTERACTIVE) {
             m_print(std::cout, _CLG, "\nMODE INTÉRACTIF: Appuyez sur ENTRER pour terminer...\n", _CLR);

@@ -5,13 +5,17 @@ void plotRunGRASP(
         const std::string instance,
         const std::vector<int>& zInits,
         const std::vector<int>& zAmels,
-        const std::vector<int>& zBests) {
-    int i(0), n = zInits.size();
+        const std::vector<int>& zBests,
+        std::string save_path) {
+    int i(0), n = zInits.size(), ins_i(-1);
     auto X = matplot::linspace(1, n, n);
     std::string ins(instance);
-    for(i = 0; i < (int)ins.size(); i++)
+    for(i = 0; i < (int)ins.size(); i++) {
         if(ins[i] == '_')
-            ins.replace(i, 1, "＿");
+            ins_i = i, ins.replace(i, 1, "＿");
+        if(ins[i] == '.')
+            ins = ins.substr(0, i);
+    }
     std::string tit("GRASP-SPP | z_{Init} z_{LS} z_{Best} | " + ins);
 
     double lb = *std::min_element(std::begin(zInits), std::end(zInits)),
@@ -56,17 +60,24 @@ void plotRunGRASP(
     matplot::legend()
         ->location(matplot::legend::general_alignment::bottomright);
     fig->draw();
+    if(ins_i != -1) ins.replace(ins_i, 3, "_");
+    if(save_path.compare(""))
+        matplot::save(save_path + "run_" + ins + ".png");
 }
 
 void plotProbaRunGRASP(
         const std::string instance,
         const std::vector<double>& alpha,
-        const std::vector<double>& proba) {
-    int i(0);
+        const std::vector<double>& proba,
+        std::string save_path) {
+    int i(0), ins_i(-1);
     std::string ins(instance);
-    for(i = 0; i < (int)ins.size(); i++)
+    for(i = 0; i < (int)ins.size(); i++) {
         if(ins[i] == '_')
-            ins.replace(i, 1, "＿");
+            ins_i = i, ins.replace(i, 1, "＿");
+        if(ins[i] == '.')
+            ins = ins.substr(0, i);
+    }
     std::string tit("GRASP-SPP | proba_{α} | " + ins);
 
     auto fig = matplot::figure(true);
@@ -79,6 +90,9 @@ void plotProbaRunGRASP(
     matplot::xticks(alpha);
     matplot::bar(alpha, proba);
     fig->draw();
+    if(ins_i != -1) ins.replace(ins_i, 3, "_");
+    if(save_path.compare(""))
+        matplot::save(save_path + "proba_" + ins + ".png");
 }
 
 void plotAnalyseGRASP(
@@ -86,12 +100,16 @@ void plotAnalyseGRASP(
         const std::vector<double>& divs,
         const std::vector<int>& zMin,
         const std::vector<double>& zMoy,
-        const std::vector<int>& zMax) {
-    int n = divs.size();
+        const std::vector<int>& zMax,
+        std::string save_path) {
+    int n = divs.size(), ins_i(-1);
     std::string ins(instance);
-    for(int i = 0; i < (int)ins.size(); i++)
+    for(int i = 0; i < (int)ins.size(); i++) {
         if(ins[i] == '_')
-            ins.replace(i, 1, "＿");
+            ins_i = i, ins.replace(i, 1, "＿");
+        if(ins[i] == '.')
+            ins = ins.substr(0, i);
+    }
     std::string tit("GRASP-SPP | z_{min} z_{moy} z_{max} | " + ins);
     auto yerr1 = matplot::transform(matplot::linspace(0, n-1, n),
             [zMin, zMoy](double x) {
@@ -129,16 +147,24 @@ void plotAnalyseGRASP(
     matplot::legend()
         ->location(matplot::legend::general_alignment::bottomright);
     fig->draw();
+    if(ins_i != -1) ins.replace(ins_i, 3, "_");
+    if(save_path.compare(""))
+        matplot::save(save_path + "analyse_" + ins + ".png");
 }
 
 void plotCPUt(
         std::vector<std::string>& fnames,
-        std::vector<float>& tMoy) {
+        std::vector<float>& tMoy,
+        std::string save_path) {
     int n;
-    for(n = 0; n < (int)fnames.size(); n++)
-        for(int i = 0; i < (int)fnames[n].size(); i++)
+    for(n = 0; n < (int)fnames.size(); n++) {
+        for(int i = 0; i < (int)fnames[n].size(); i++) {
             if(fnames[n][i] == '_')
                 fnames[n].replace(i, 1, "＿");
+            if(fnames[n][i] == '.')
+                fnames[n] = fnames[n].substr(0, i);
+        }
+    }
     bool sp(n == 1); // Singlepoint ? (little trick if there is only one
                      // instance)
     auto x = matplot::linspace(1, sp ? n+2 : n, sp ? n+2 : n);
@@ -169,4 +195,6 @@ void plotCPUt(
         tMoy[0] = tMoy[1], tMoy.pop_back(), tMoy.pop_back();
         fnames[0] = fnames[1], fnames.pop_back(), fnames.pop_back();
     }
+    if(save_path.compare(""))
+        matplot::save(save_path + "CPUt.png");
 }
