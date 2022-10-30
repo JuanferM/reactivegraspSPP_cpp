@@ -13,7 +13,7 @@
 
 // Paramètres GRASP
 #define NUM_RUN         1
-#define NUM_ITER        200
+#define NUM_ITER        50
 #define ALPHA           {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95}
 #define DELTA           4
 #define PROBA_UPDATE    50

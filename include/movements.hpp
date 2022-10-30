@@ -60,8 +60,8 @@ bool one_oneExchange(
 // CAUTION : since we use recursion we should be cautious of the program
 // stack size. Only things like the return address, the function arguments
 // and the variable used in the function are stored in the stack. Since we
-// don't initialize too much stuff in the function, the memory used is for
-// the most part from storing the return address and function arguments on
+// don't initialize too much stuff in the function, the memory used comes (for
+// the most part) from storing the return address and function arguments on
 // stack. The size of the arguments should be around 70 bytes per call. We
 // stop at  recursion_depth == 2  and we make at most N-2 recursive calls
 // per level with N the number of ones in x.
