@@ -84,6 +84,7 @@ int main() {
         if(NUM_ITER-1 <= 1) divs[0] = 1;
     #else
         float tt(0.f);;
+        m_print(std::cout, _CLP, "\nRÉSOLUTION AVEC GLPK\n\n", _CLR);
     #endif
 
     std::vector<std::string> fnames = getfname(path);
