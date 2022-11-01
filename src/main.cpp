@@ -4,7 +4,7 @@
 #include <omp.h>
 
 // Paramètres GLPK
-#define USE_GLPK        true
+#define USE_GLPK        false
 #define VERBOSE_GLPK    false
 
 // Paramètres OpenMP
@@ -12,11 +12,11 @@
 #define MAX_THREADS     10
 
 // Paramètres GRASP
-#define NUM_RUN         20
+#define NUM_RUN         1
 #define NUM_ITER        200
 #define ALPHA           {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95}
 #define DELTA           4
-#define PROBA_UPDATE    10
+#define PROBA_UPDATE    50
 #define NUM_DIVISION    20
 #define DEEPSEARCH      false
 
