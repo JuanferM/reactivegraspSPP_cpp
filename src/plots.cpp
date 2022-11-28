@@ -171,7 +171,11 @@ void plotCPUt(
         std::string save_path,
         bool silent_mode) {
     int n;
+    std::vector<std::string> tMoytxt = std::vector<std::string>(fnames.size());
     for(n = 0; n < (int)fnames.size(); n++) {
+        std::ostringstream v; v.precision(3);
+        v << std::fixed << tMoy[n];
+        tMoytxt[n] = v.str();
         for(int i = 0; i < (int)fnames[n].size(); i++) {
             if(fnames[n][i] == '_')
                 fnames[n].replace(i, 1,  "\\\\\\_"), i+=4;
@@ -203,6 +207,7 @@ void plotCPUt(
     .marker("o")
     .marker_face(true)
     .display_name("tMoy");
+    matplot::text(x, tMoy, tMoytxt);
     matplot::legend()
         ->location(matplot::legend::general_alignment::bottomright);
     if(!silent_mode) fig->draw();
