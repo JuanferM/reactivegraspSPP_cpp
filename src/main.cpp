@@ -18,12 +18,12 @@
 #define DELTA           4
 #define PROBA_UPDATE    50
 #define NUM_DIVISION    20
-#define DEEPSEARCH      false
+#define DEEPSEARCH      true
 
 // Paramètres plot
 #define INTERACTIVE     false
-#define SILENT_MODE     true
-#define PATH_PLOT       "exp/"
+#define SILENT_MODE     false
+#define PATH_PLOT       ""
 
 int main() {
     // This program will create different sequence of
@@ -92,6 +92,8 @@ int main() {
         #if USE_GLPK
             modelSPP(instance, path, &tt, VERBOSE_GLPK);
         #else
+            float allrunzmoy(0);
+            int allrunzmin(INT_MAX), allrunzmax(INT_MIN);
             std::vector<int>    zMin(_NBD_, INT_MAX),
                                 zMax(_NBD_, INT_MIN);
             std::vector<double> zMoy(_NBD_, 0);
@@ -120,10 +122,16 @@ int main() {
                     zMax[div] = std::max(zBests[divs[div]-1], zMax[div]);
                     zMoy[div] += zBests[divs[div]-1];
                 }
+                // Compute allrunzmin, allrunzmoy and allrunzmax
+                allrunzmin = std::min(allrunzmin, zBests[NUM_RUN-1]);
+                allrunzmax = std::max(allrunzmax, zBests[NUM_RUN-1]);
+                allrunzmoy += zBests[NUM_RUN-1];
+
                 m_print(std::cout, " ", run+1);
             }
 
             // Finish computing average z values
+            allrunzmoy /= (double)NUM_RUN;
             for(div = 0; div < _NBD_; div++) zMoy[div] /= (double)NUM_RUN;
 
             // Plots
@@ -132,7 +140,8 @@ int main() {
             m_print(std::cout, "Plot des probabilités des α pour le dernier run...\n");
             plotProbaRunGRASP(instance, alpha, proba, PATH_PLOT, SILENT_MODE);
             m_print(std::cout, "Bilan de l'ensemble des runs...\n");
-            plotAnalyseGRASP(instance, divs, zMin, zMoy, zMax, PATH_PLOT, SILENT_MODE);
+            plotAnalyseGRASP(instance, divs, zMin, zMoy, zMax, allrunzmin, allrunzmoy,
+                    allrunzmax, PATH_PLOT, SILENT_MODE);
 
             /* MOST IMPORTANT SECTIONS */
             freeSPP(C, A, U);

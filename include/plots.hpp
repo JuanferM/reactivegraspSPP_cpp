@@ -1,5 +1,5 @@
-#ifndef GRASPPLOTS_H
-#define GRASPPLOTS_H
+#ifndef PLOTS_H
+#define PLOTS_H
 
 #include "librarySPP.hpp"
 
@@ -36,6 +36,9 @@ void plotAnalyseGRASP(
         const std::vector<int>& zMin,
         const std::vector<double>& zMoy,
         const std::vector<int>& zMax,
+        const int allrunzmin,
+        const float allrunzmoy,
+        const int allrunzmax,
         std::string save_path = "",
         bool silent_mode = false);
 
@@ -47,4 +50,4 @@ void plotCPUt(
         std::string save_path = "",
         bool silent_mode = false);
 
-#endif /* end of include guard: GRASPPLOTS_H */
+#endif /* end of include guard: PLOTS_H */

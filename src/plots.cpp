@@ -1,5 +1,4 @@
 #include "plots.hpp"
-#include "matplot/util/common.h"
 
 void plotRunGRASP(
         const std::string instance,
@@ -17,7 +16,7 @@ void plotRunGRASP(
         if(ins[i] == '.')
             ins = ins.substr(0, i);
     }
-    std::string tit("GRASP-SPP | z_{Init} z_{LS} z_{Best} | " + ins);
+    std::string tit("SPP : " + ins + " | ReactiveGRASP : " + std::to_string(zBests[n-1]));
 
     double lb = *std::min_element(std::begin(zInits), std::end(zInits)),
            ub = *std::max_element(std::begin(zBests), std::end(zBests));
@@ -29,8 +28,9 @@ void plotRunGRASP(
 
     auto fig = matplot::figure(true);
     fig->name("Examen d'un run");
-    fig->size(576, 576);
+    fig->size(576, 476);
     fig->title(tit);
+    fig->title_font_size_multiplier(1);
     matplot::xlabel("Itérations");
     matplot::ylabel("valeurs de z(x)");
     matplot::xticks({1.0, ceil(n/4.0), ceil(n/2.0), ceil((3*n)/4.0), (double)n});
@@ -80,12 +80,13 @@ void plotProbaRunGRASP(
         if(ins[i] == '.')
             ins = ins.substr(0, i);
     }
-    std::string tit("GRASP-SPP | proba_{α} | " + ins);
+    std::string tit("ReactiveGRASP-SPP : " + ins + " | proba_{α}");
 
     auto fig = matplot::figure(true);
     fig->name("Probabilités p des α pour un run");
-    fig->size(576, 576);
+    fig->size(576, 476);
     fig->title(tit);
+    fig->title_font_size_multiplier(1);
     matplot::xlabel("α");
     matplot::ylabel("P(α)");
     matplot::ylim({0, 1});
@@ -103,17 +104,25 @@ void plotAnalyseGRASP(
         const std::vector<int>& zMin,
         const std::vector<double>& zMoy,
         const std::vector<int>& zMax,
+        const int allrunzmin,
+        const float allrunzmoy,
+        const int allrunzmax,
         std::string save_path,
         bool silent_mode) {
     int n = divs.size(), ins_i(-1);
-    std::string ins(instance);
+    std::ostringstream mo; mo.precision(2);
+    mo << std::fixed << "z_{moy} : " << allrunzmoy;
+    std::string ins(instance),
+                sp(" | "),
+                mi("z_{min} : " + std::to_string(allrunzmin)),
+                ma("z_{max} : " + std::to_string(allrunzmax));
     for(int i = 0; i < (int)ins.size(); i++) {
         if(ins[i] == '_')
             ins_i = i, ins.replace(i, 1,  "\\\\\\_"), i+=4;
         if(ins[i] == '.')
             ins = ins.substr(0, i);
     }
-    std::string tit("GRASP-SPP | z_{min} z_{moy} z_{max} | " + ins);
+    std::string tit("ReactiveGRASP-SPP : " + ins + sp + mi + sp + mo.str() + sp + ma);
     auto yerr1 = matplot::transform(matplot::linspace(0, n-1, n),
             [zMin, zMoy](double x) {
                 return zMoy[int(x)]-zMin[(int)x];
@@ -129,8 +138,9 @@ void plotAnalyseGRASP(
 
     auto fig = matplot::figure(true);
     fig->name("Bilan tous runs");
-    fig->size(576, 576);
+    fig->size(576, 476);
     fig->title(tit);
+    fig->title_font_size_multiplier(1);
     matplot::xlabel("Itérations");
     matplot::ylabel("valeurs de z(x)");
     matplot::axis({divs[0]-1, divs[n-1]+1, 0, ub+(int(ub/100)+1)*2});
@@ -180,7 +190,8 @@ void plotCPUt(
     auto fig = matplot::figure(true);
     fig->name("Bilan CPUt tous runs");
     fig->size(576, 676);
-    fig->title("GRASP-SPP | tMoy");
+    fig->title("ReactiveGRASP-SPP | tMoy");
+    fig->title_font_size_multiplier(1);
     matplot::ylabel("CPUt moyen (en s)");
     matplot::xticks(x);
     matplot::xticklabels(fnames);
