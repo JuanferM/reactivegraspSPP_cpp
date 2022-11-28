@@ -123,9 +123,9 @@ int main() {
                     zMoy[div] += zBests[divs[div]-1];
                 }
                 // Compute allrunzmin, allrunzmoy and allrunzmax
-                allrunzmin = std::min(allrunzmin, zBests[NUM_RUN-1]);
-                allrunzmax = std::max(allrunzmax, zBests[NUM_RUN-1]);
-                allrunzmoy += zBests[NUM_RUN-1];
+                allrunzmin = std::min(allrunzmin, zBests[NUM_ITER-1]);
+                allrunzmax = std::max(allrunzmax, zBests[NUM_ITER-1]);
+                allrunzmoy += zBests[NUM_ITER-1];
 
                 m_print(std::cout, " ", run+1);
             }
