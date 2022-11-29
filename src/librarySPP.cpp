@@ -32,7 +32,7 @@ std::tuple<int, int, int*, char*, float*> loadSPP(std::string fname)
     std::ifstream f(fname);
     std::string line("");
     std::stringstream ss("");
-    int m(0), n(0), *C(nullptr), i(0), j(0);
+    int m(-1), n(-1), *C(nullptr), i(0), j(0);
     char *A(nullptr); float *U(nullptr);
 
     try {
