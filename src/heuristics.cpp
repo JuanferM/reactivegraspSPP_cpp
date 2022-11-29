@@ -26,14 +26,14 @@ std::tuple<char*, int, char*> GreedyRandomized(
         // Indices of max and min utilities
         for(j = max_u, max_u = 0; j < n && u_order[max_u] == -1; j++)
             max_u = j;
-        for(j = min_u, min_u = 0; j >= 0 && u_order[min_u] == -1; j--)
+        for(j = min_u, min_u = n-1; j >= 0 && u_order[min_u] == -1; j--)
             min_u = j;
         limit = U[u_order[min_u]] + alpha * (U[u_order[max_u]] - U[u_order[min_u]]);
         for(j = 0; j < n; j++)
             // If variable's index is candidate and the utility
             // greater than limit then we add the index in RCL
             if(u_order[j] != -1 && U[u_order[j]] >= limit)
-                RCL.push_back(j);
+               RCL.push_back(j);
 
         // Select an element e from RCL at random
         e = (RCL.size()) ? *select_randomly(RCL.begin(), RCL.end()) : max_u;
@@ -107,7 +107,7 @@ void ReactiveGRASP(
             }
             if(i == (int)proba.size()) i--;
             if(sel_alpha == -1.0) { // Make sure sel_alpha is well defined in any
-                i = rand() / alpha.size(); // case
+                i = rand() % alpha.size(); // case
                 sel_alpha = alpha[i];
             }
             std::tie(x, zInits[upd], column) = GreedyRandomized(m, n, C, A, U, sel_alpha);
