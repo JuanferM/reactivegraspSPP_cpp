@@ -32,7 +32,7 @@ std::tuple<int, int, int*, char*, float*> loadSPP(std::string fname)
     std::ifstream f(fname);
     std::string line("");
     std::stringstream ss("");
-    int m(-1), n(-1), *C(nullptr), i(0), j(0);
+    int m(0), n(0), *C(nullptr), i(0), j(0);
     char *A(nullptr); float *U(nullptr);
 
     try {
@@ -43,14 +43,16 @@ std::tuple<int, int, int*, char*, float*> loadSPP(std::string fname)
             C = new int[n], U = new float[n], A = new char[n*m];
             for(i = 0; i < n*m; i++) { A[i] = 0; if(i < n) U[i] = 0; }
             // Read the n coefficiens of the objective function and init C
-            getline(f, line); ss.str(line); ss.clear(); while(ss >> C[j++]);
+            getline(f, line); ss.str(line); ss.clear(); while(j < n && ss >> C[j++]);
             // Read the m constraints and reconstruct matrix A
-            for(j = 0; j < m; j++){
+            for(j = 0, i = 0; j < m; j++){
                 // Read number of not null elements on constraint i (not used)
                 getline(f, line);
                 // Read indices of not null elements on constraint i
                 getline(f, line); ss.str(line); ss.clear();
-                while(ss >> i) A[INDEX(i-1, j)] = 1, U[i-1] += 1;
+                while(ss >> i)
+                    if(i > 0 && i <= n)
+                        A[INDEX(i-1, j)] = 1, U[i-1] += 1;
             }
             f.close();
         } else throw std::runtime_error("Couldn't open file " + fname);

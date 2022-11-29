@@ -189,6 +189,9 @@ void plotCPUt(
     if(sp) {
         tMoy.push_back(tMoy[0]), tMoy.push_back(0), tMoy[0] = 0;
         fnames.push_back(fnames[0]), fnames.push_back(""), fnames[0] = "";
+        tMoytxt.push_back(""); tMoytxt.push_back("");
+        std::string tmp = tMoytxt[0];
+        tMoytxt[0] = "", tMoytxt[1] = tmp;
     }
 
     auto fig = matplot::figure(true);
@@ -207,7 +210,7 @@ void plotCPUt(
     .marker("o")
     .marker_face(true)
     .display_name("tMoy");
-    matplot::text(x, tMoy, tMoytxt);
+    matplot::text(x, tMoy, tMoytxt)->color("green");
     matplot::legend()
         ->location(matplot::legend::general_alignment::bottomright);
     if(!silent_mode) fig->draw();
