@@ -142,16 +142,6 @@ redéfinir NUM_RUN (constante préprocesseur dans le fichier
 Où _x_ est un nombre entier strictement positif au moins égal à 1 (toute valeur
 incorrecte sera remplacée par 1).
 
-#### Nombre de points pour l'affichage des plots
-Pour modifier le nombre de points utilisé pour afficher les runs de GRASP
-veuillez redéfinir NUM_DIVISION (constante préprocesseur dans le
-fichier `src/main.cpp`) :
-```c
-#define NUM_DIVISION <x>
-```
-Où x est un nombre entier strictement positif entre 1 et NUM_ITER (toute valeur
-incorrecte sera remplacée par NUM_ITER).
-
 #### (Plus profonde) descente
 Pour effectuer des améliorations par recherche locale de type plus profonde descente
 veuillez redéfinir DEEPSEARCH (constante préprocesseur dans le
@@ -164,7 +154,19 @@ Sinon pour des descentes "normales" :
 #define DEEPSEARCH false
 ```
 
-#### Paramètres plots
+### Paramètres plots
+
+#### Nombre de points pour l'affichage des plots
+Pour modifier le nombre de points utilisé pour afficher les runs de GRASP
+veuillez redéfinir NUM_DIVISION (constante préprocesseur dans le
+fichier `src/main.cpp`) :
+```c
+#define NUM_DIVISION <x>
+```
+Où x est un nombre entier strictement positif entre 1 et NUM_ITER (toute valeur
+incorrecte sera remplacée par NUM_ITER).
+
+#### Désactivation des plots
 L'affichage des plots peut être désactivé. Veuillez redéfinir SILENT_MODE
 (constante préprocesseur dans le fichier `src/main.cpp`) :
 ```c
@@ -177,6 +179,7 @@ pour afficher les plots :
 #define SILENT_MODE false
 ```
 
+#### Mode intéractif
 Les plots affichés sont tous intéractifs. L'actionnement de la molette de la
 souris permet de zoomer sur les plots. Cependant, une fois que le programme
 est terminé les plots deviennent statiques et il est impossible d'intéragir
@@ -192,6 +195,7 @@ Pour le désactiver :
 #define INTERACTIVE false
 ```
 
+#### Enregistrement des plots
 Pour enregistrer les plots dans un répertoire veuillez redéfinir PATH_PLOT (constante
 préprocesseur dans le fichier `src/main.cpp`) :
 ```c
