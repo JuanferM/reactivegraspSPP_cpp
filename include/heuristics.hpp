@@ -6,7 +6,7 @@
 #include <string>
 #include <cstring>
 
-// Greedy construction of a feasible solution
+// Greedy randomized construction of a feasible solution
 std::tuple<char*, int, char*> GreedyRandomized(
         int m,
         int n,
