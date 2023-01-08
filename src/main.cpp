@@ -22,7 +22,7 @@
 
 // Paramètres plot
 #define INTERACTIVE     false
-#define SILENT_MODE     true
+#define SILENT_MODE     false
 #define PATH_PLOT       "exp/"
 
 int main() {
@@ -125,7 +125,7 @@ int main() {
                 // Compute allrunzmin, allrunzmoy and allrunzmax
                 allrunzmin = std::min(allrunzmin, zBests[0]);
                 allrunzmax = std::max(allrunzmax, zBests[NUM_ITER-1]);
-                allrunzmoy += zBests[NUM_RUN-1];
+                allrunzmoy += zBests[NUM_ITER-1];
 
                 m_print(std::cout, " ", run+1);
             }
