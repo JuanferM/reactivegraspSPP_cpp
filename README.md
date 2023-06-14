@@ -1,5 +1,8 @@
 # reactivegraspSPP_cpp
 ReactiveGRASP pour le Set Packing Problem (SPP)
+<p align="center">
+  <img src="reactiveGRASP.png">
+</p>
 
 *Commande pour compiler*:
 
